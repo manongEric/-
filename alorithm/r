@@ -1,0 +1,18 @@
+total 88K
+drwxrwxr-x 2 eric eric 4.0K Jan 22 16:47 .
+drwxr-xr-x 9 eric eric 4.0K Jan 22 16:47 ..
+-rw-rw-r-- 1 eric eric 1.2K Jan 18 10:33 1119.cpp
+-rw-rw-r-- 1 eric eric 1.8K Jan 22 08:48 1144.cpp
+-rw-rw-r-- 1 eric eric 1.5K Jan 20 21:11 1265.cpp
+-rw-rw-r-- 1 eric eric 1.1K Jan 17 16:31 1364.cpp
+-rw-rw-r-- 1 eric eric  962 Jan 21 16:55 1991.cpp
+-rw-rw-r-- 1 eric eric  347 Jan 14 15:16 1.cpp
+-rw-rw-r-- 1 eric eric 1.3K Jan 22 16:25 all_toposort.cpp
+-rwxrwxr-x 1 eric eric  28K Jan 22 16:47 a.out
+-rw-rw-r-- 1 eric eric 1.1K Jan 14 15:57 bellman_ford.cpp
+-rw-rw-r-- 1 eric eric 1.5K Jan 16 16:39 bellman_ford_queue.cpp
+-rw-rw-r-- 1 eric eric 1.2K Jan 20 15:21 kruskal.cpp
+-rw-rw-r-- 1 eric eric 1.7K Jan 22 16:47 oj641.cpp
+-rw-rw-r-- 1 eric eric 1.5K Jan 20 15:45 prim.cpp
+-rw-rw-r-- 1 eric eric    0 Jan 22 16:47 r
+-rw-rw-r-- 1 eric eric 1.3K Jan 22 16:07 toposort.cpp

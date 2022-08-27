@@ -1,0 +1,27 @@
+total 128
+-rw-r--r-- 1 eric eric    51 May  2 12:35 2
+-rwxrwxr-x 1 eric eric 13480 May  2 12:34 a.out
+-rw-rw-r-- 1 eric eric   873 May  1 16:21 callback.c
+-rw-rw-r-- 1 eric eric   774 Apr 30 15:35 daemon.c
+-rw-rw-r-- 1 eric eric   578 May  1 15:58 envOpt.c
+-rw-r--r-- 1 eric eric     0 May  2 12:34 file
+-rw-rw-r-- 1 eric eric   527 Apr 21 09:47 fopenR.c
+-rw-rw-r-- 1 eric eric   485 Apr 21 09:49 fopenW.c
+-rw-rw-r-- 1 eric eric   688 Apr 18 15:28 forkOpt.c
+-rw-rw-r-- 1 eric eric   753 Apr 18 16:42 forkTest.c
+-rw-rw-r-- 1 eric eric   991 Apr 22 13:29 getMsg.c
+-rw-rw-r-- 1 eric eric    37 May  2 11:28 kaikeba.txt
+-rw-rw-r-- 1 eric eric   265 May 17 12:33 myShell.c
+-rw-rw-r-- 1 eric eric   811 May  1 16:34 pipeOpt.c
+-rwxrwxr-x 1 eric eric  8616 Apr 21 10:09 read
+-rw-rw-r-- 1 eric eric   629 Apr 21 10:07 readFIFO.c
+-rw-rw-r-- 1 eric eric  1000 Apr 22 10:01 sendMsg.c
+-rw-rw-r-- 1 eric eric  1544 Apr 22 09:44 shmOpt.c
+-rw-r--r-- 1 eric eric     0 May 17 12:36 text.txt
+-rw-rw-r-- 1 eric eric   562 Apr 30 14:48 ttyOpt.c
+prw-rw-r-- 1 eric eric     0 Apr 21 10:10 tube
+-rwxrwxr-x 1 eric eric  8392 Apr 19 14:10 upper
+-rw-rw-r-- 1 eric eric   388 Apr 19 13:42 upper.c
+-rw-rw-r-- 1 eric eric   953 Apr 20 11:24 waitOpt.c
+-rwxrwxr-x 1 eric eric  8480 Apr 21 10:10 write
+-rw-rw-r-- 1 eric eric   554 May  1 16:04 writeFIFO.c

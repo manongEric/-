@@ -1,0 +1,58 @@
+/*************************************************************************
+	> File Name: _static.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Thu 23 Jun 2022 08:24:47 PM CST
+ ************************************************************************/
+
+#include<iostream>
+using namespace std;
+class People{
+protected:
+    double weight;
+    double height;
+    int age;
+
+public:
+    static int s_count;
+    static People* people;
+private:
+    People() {
+        cout << "call construcor " << endl;
+    }
+    ~People() {
+        cout << "call desconstructor" << endl;
+    }
+public:
+    static People* getInstance() {//调用的时候进行实例化
+        if (people == nullptr) {
+            people = new People();
+        }
+        return people;
+    }
+    static People* create() {
+        return new People();
+    }
+    static void release(People* p) {
+        delete p;
+    }
+    void say() {
+        cout << "age = " << this->age << endl;
+    }
+
+    void eat(People* p) {
+        p->weight++;
+    }
+};
+int People::s_count = 123;
+People* People::people = nullptr;//启动时直接实例化
+
+int main() {
+    People* p = People::create();
+    cout << sizeof(People) << " " << People::s_count << endl;
+
+    People::release(p);
+    cout << "instance = " << People::getInstance() << endl;
+    cout << "instance = " << People::getInstance() << endl;
+    return 0;
+}

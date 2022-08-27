@@ -1,0 +1,499 @@
+/*************************************************************************
+	> File Name: binary_search_tree.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Wed 13 Jul 2022 03:58:44 PM CST
+ ************************************************************************/
+
+#include<iostream>
+#include<set>
+using namespace std;
+
+#define BEGIN(x) namespace x {
+#define END(x) }
+
+BEGIN(test1)
+//父类 二叉树一般节点类
+class base_node{
+public:
+    int key;
+    base_node *father, *lchild, *rchild;
+public:
+    base_node(
+        int key = 0,
+        base_node *father = nullptr,
+        base_node *lchild = nullptr,
+        base_node *rchild = nullptr):
+    key(key), father(father), lchild(lchild), rchild(rchild){}
+};
+//二叉排序树节点类
+class binary_search_node : public base_node {
+public:
+    typedef base_node node_t;//定义为父类，否则要强制转换
+    //实现默认构造，初始化即为父类节点初始化
+    binary_search_node(
+        int key = 0,
+        node_t *father = nullptr,
+        node_t *lchild = nullptr,
+        node_t *rchild = nullptr):node_t(key, father, lchild, rchild){}
+    
+    static node_t *insert(node_t *father, node_t *root, int key){
+        if(root == nullptr) return binary_search_node::getNewNode(father, key);
+        if (key == root->key) return root;
+        if (key < root->key) root->lchild = insert(root, root->lchild, key);
+        else root->rchild = insert(root, root->rchild, key);
+        return root;
+    }
+
+    static node_t *getNewNode(node_t *father, int key) {
+        return new binary_search_node(key, father);
+    }
+    static node_t *next(node_t *ptr) {
+        if (ptr->rchild) {
+            ptr = ptr->rchild;
+            while(ptr->lchild) ptr = ptr->lchild;
+            return ptr;
+        }
+        while (ptr->father && ptr != ptr->father->lchild) {
+            ptr = ptr->father;
+        }
+        return ptr->father;
+    }
+};
+
+//begin(), end(),迭代过程的迭代器类
+class binary_search_node_iterator{
+public:
+    typedef base_node node_t;
+    typedef binary_search_node_iterator iterator;
+    binary_search_node_iterator(node_t *ptr) : ptr(ptr){}//传入的指针地址封装为迭代器对象
+    bool operator!=(const iterator& iter) {
+        return ptr != iter.ptr; // iter相当于 for auto iter, end()经封装转换为迭代器对象ptr;iter也是这种对象
+    }
+    iterator& operator++() {
+        ptr = binary_search_node::next(ptr);
+        return *this;
+    }
+    iterator operator++(int) {
+        iterator ret(ptr);
+        ptr = binary_search_node::next(ptr);
+        return ret;
+    }
+
+    int& operator*() {
+        return ptr->key;
+    }
+private:
+    node_t *ptr;
+};
+//二叉排序树 树类
+class bs_tree{
+    //friend ostream& operator<<(ostream&, const bs_tree&);
+private:
+    binary_search_node root;//虚拟根节点
+public:
+    typedef base_node node_t;
+    typedef binary_search_node_iterator iterator;
+    void insert(int key){
+        root.lchild = binary_search_node::insert(&root, root.lchild, key);
+        return;
+    }
+    node_t *get_root(){return root.lchild;}
+    iterator begin(){
+        node_t *p = &root;
+        while (p->lchild) p = p->lchild;
+        return iterator(p);
+    }
+    iterator end(){return iterator(&root);}
+};
+/*ostream& operator<<(ostream &os, const base_node& bn){
+    os << "bn.key :" << bn.key << endl;
+    return os;
+}*/
+
+int main() {
+    bs_tree t;
+    for (int i = 0; i < 5; i++) {
+        int val = rand() % 100;
+        cout << "insert : " << val << endl;
+        t.insert(val);
+    }
+    for (auto x : t) {//auto iter = t.begin(); iter != t.end(); iter++, 将iter封装为迭代器类型，并重载丰富
+        cout << "output : " << x << endl;
+    }
+    //output_tree(t.get_root());
+}
+END(test1)
+
+
+BEGIN(test2)
+//父类 二叉树一般节点类
+template<typename T>
+class base_node{
+public:
+    T key;
+    base_node *father, *lchild, *rchild;
+public:
+    base_node(
+        T key = 0,
+        base_node *father = nullptr,
+        base_node *lchild = nullptr,
+        base_node *rchild = nullptr):
+    key(key), father(father), lchild(lchild), rchild(rchild){}
+};
+//二叉排序树节点类
+template<typename T>
+class binary_search_node : public base_node<T> {
+public:
+    typedef base_node<T> node_t;//定义为父类，否则要强制转换
+    //实现默认构造，初始化即为父类节点初始化
+    binary_search_node(
+        T key = 0,
+        node_t *father = nullptr,
+        node_t *lchild = nullptr,
+        node_t *rchild = nullptr):node_t(key, father, lchild, rchild){}
+    
+    static node_t *insert(node_t *father, node_t *root, T key){
+        if(root == nullptr) return binary_search_node<T>::getNewNode(father, key);
+        if (key == root->key) return root;
+        if (key < root->key) root->lchild = insert(root, root->lchild, key);
+        else root->rchild = insert(root, root->rchild, key);
+        return root;
+    }
+
+    static node_t *getNewNode(node_t *father, T key) {
+        return new binary_search_node<T>(key, father);
+    }
+    static node_t *next(node_t *ptr) {
+        if (ptr->rchild) {
+            ptr = ptr->rchild;
+            while(ptr->lchild) ptr = ptr->lchild;
+            return ptr;
+        }
+        while (ptr->father && ptr != ptr->father->lchild) {
+            ptr = ptr->father;
+        }
+        return ptr->father;
+    }
+};
+
+//begin(), end(),迭代过程的迭代器类
+template <typename T>
+class binary_search_node_iterator{
+public:
+    typedef base_node<T> node_t;//存储T类型的而二叉树结点类型
+    typedef binary_search_node_iterator<T> iterator;
+    binary_search_node_iterator(node_t *ptr) : ptr(ptr){}//传入的指针地址封装为迭代器对象
+    bool operator!=(const iterator& iter) {
+        return ptr != iter.ptr; // iter相当于 for auto iter, end()经封装转换为迭代器对象ptr;iter也是这种对象
+    }
+    iterator& operator++() {
+        ptr = binary_search_node<T>::next(ptr);
+        return *this;
+    }
+    iterator operator++(int) {
+        iterator ret(ptr);
+        ptr = binary_search_node<T>::next(ptr);
+        return ret;
+    }
+
+    T& operator*() {
+        return ptr->key;
+    }
+private:
+    node_t *ptr;
+};
+//二叉排序树 树类
+template<typename T>
+class bs_tree{
+    //friend ostream& operator<<(ostream&, const bs_tree&);
+private:
+    binary_search_node<T> root;//虚拟根节点
+public:
+    typedef base_node<T> node_t;
+    typedef binary_search_node_iterator<T> iterator;
+    void insert(const T& key){
+        root.lchild = binary_search_node<T>::insert(&root, root.lchild, key);
+        return;
+    }
+    node_t *get_root(){return root.lchild;}
+    iterator begin(){
+        node_t *p = &root;
+        while (p->lchild) p = p->lchild;
+        return iterator(p);
+    }
+    iterator end(){return iterator(&root);}
+};
+/*ostream& operator<<(ostream &os, const base_node& bn){
+    os << "bn.key :" << bn.key << endl;
+    return os;
+}*/
+template<typename T>//set中所存储的值的类型
+class set{
+public:
+    typedef typename bs_tree<T>::iterator iterator;//加入typename显示的说明这是一个成员类型而非成员变量（加入有特化，就变成此类中的成员变量了）
+    void insert(const T& t) {
+        tree.insert(t);
+        return;
+    }
+    iterator begin() {return tree.begin();}
+    iterator end() {return tree.end();}
+private:
+    bs_tree<T> tree;//往set中插数据  就是往自定义结构中插数据
+};
+int main() {
+    test2::set<int> t;
+    for (int i = 0; i < 5; i++) {
+        int val = rand() % 100;
+        cout << "insert : " << val << endl;
+        t.insert(val);
+    }
+    for (auto x : t) {//auto iter = t.begin(); iter != t.end(); iter++, 将iter封装为迭代器类型，并重载丰富
+        cout << "output : " << x << endl;
+    }
+    //output_tree(t.get_root());
+}
+END(test2)
+
+
+BEGIN(test3)
+
+template<typename T>
+class Select1st{
+public:
+    auto operator()(T a)-> decltype(a.first) {//auto 后置推导类型，以及万能转发 
+        return a.first;
+    }
+};
+template<typename T>
+class SelectRaw {
+public:
+    T operator()(T a) {
+        return a;
+    }
+};
+template<typename T>
+class less{
+public:
+    bool operator()(const T& a, const T& b) {
+        return a < b;
+    }
+};
+//父类 二叉树一般节点类
+template<typename T>
+class base_node{
+public:
+    T data;
+    base_node *father, *lchild, *rchild;
+public:
+    base_node(
+        T data = T(),
+        base_node *father = nullptr,
+        base_node *lchild = nullptr,
+        base_node *rchild = nullptr):
+    data(data), father(father), lchild(lchild), rchild(rchild){}
+
+};
+//二叉排序树节点类
+template<typename K, typename T, typename SKEY, typename CompareK>
+class binary_search_node : public base_node<T> {
+public:
+    typedef base_node<T> node_t;//定义为父类，否则要强制转换
+    //实现默认构造，初始化即为父类节点初始化
+    binary_search_node(
+        T key = T(),
+        node_t *father = nullptr,
+        node_t *lchild = nullptr,
+        node_t *rchild = nullptr):node_t(key, father, lchild, rchild){}
+    
+    static node_t *insert(node_t *father, node_t *root, T data){
+        if(root == nullptr) return binary_search_node<K, T, SKEY, CompareK>::getNewNode(father, data);
+        if (comp(SKEY()(data), SKEY()(root->data))) {
+            root->lchild = insert(root, root->lchild, data);
+        } else if(comp(SKEY()(root->data), SKEY()(data))){
+            root->rchild = insert(root, root->rchild, data);
+        }
+        return root;
+    }
+
+    static node_t *getNewNode(node_t *father, T key) {
+        return new binary_search_node<K, T,SKEY, CompareK>(key, father);
+    }
+    static node_t *next(node_t *ptr) {
+        if (ptr->rchild) {
+            ptr = ptr->rchild;
+            while(ptr->lchild) ptr = ptr->lchild;
+            return ptr;
+        }
+        while (ptr->father && ptr != ptr->father->lchild) {
+            ptr = ptr->father;
+        }
+        return ptr->father;
+    }
+    static node_t *find(node_t *root, const K &key) {
+        node_t *p = root;
+        while(p) {
+            if (key < SKEY()(p->data)) {
+                p = p->lchild;
+            } else if (SKEY()(p->data) < key) {
+                p = p->rchild;
+            } else {
+                break;
+            }
+        }
+        return p;
+    }
+    static CompareK comp;
+};
+template<typename K, typename T, typename SKEY, typename CompareK>
+CompareK binary_search_node<K, T, SKEY, CompareK>::comp;
+
+//begin(), end(),迭代过程的迭代器类
+template <typename K, typename T, typename SKEY, typename CompareK>
+class binary_search_node_iterator{
+public:
+    typedef base_node<T> node_t;//存储T类型的而二叉树结点类型
+    typedef binary_search_node_iterator<K, T, SKEY, CompareK> iterator;
+    binary_search_node_iterator(node_t *ptr) : ptr(ptr){}//传入的指针地址封装为迭代器对象
+    bool operator!=(const iterator& iter) {
+        return ptr != iter.ptr; // iter相当于 for auto iter, end()经封装转换为迭代器对象ptr;iter也是这种对象
+    }
+    iterator& operator++() {
+        ptr = binary_search_node<K, T, SKEY, CompareK>::next(ptr);
+        return *this;
+    }
+    iterator operator++(int) {
+        iterator ret(ptr);
+        ptr = binary_search_node<K, T, SKEY, CompareK>::next(ptr);
+        return ret;
+    }
+
+    T& operator*() {
+        return ptr->data;
+    }
+private:
+    node_t *ptr;
+};
+//二叉排序树 树类
+template<typename K, typename T, typename SKEY, typename CompareK>// SKEY用于选取键值的方法的类型
+class bs_tree{
+    //friend ostream& operator<<(ostream&, const bs_tree&);
+private:
+    binary_search_node<K ,T, SKEY, CompareK> root;//虚拟根节点
+public:
+    typedef base_node<T> node_t;
+    typedef binary_search_node_iterator<K, T, SKEY, CompareK> iterator;
+    void insert(const T data){
+        root.lchild = binary_search_node<K, T, SKEY, CompareK>::insert(&root, root.lchild, data);
+        return;
+    }
+    node_t *find(const K &key) {
+        return binary_search_node<K, T, SKEY, CompareK>::find(root.lchild, key);
+    }
+    node_t *get_root(){return root.lchild;}
+    iterator begin(){
+        node_t *p = &root;
+        while (p->lchild) p = p->lchild;
+        return iterator(p);
+    }
+    iterator end(){return iterator(&root);}
+};
+/*ostream& operator<<(ostream &os, const base_node& bn){
+    os << "bn.key :" << bn.key << endl;
+    return os;
+}*/
+
+template<typename K ,typename V, typename CompareK = test3::less<K>>
+class map{
+public:
+    typedef pair<const K, V> value_type;
+    typedef typename bs_tree<K, value_type, Select1st<value_type>, CompareK>::iterator iterator;
+    typedef typename bs_tree<K, value_type, Select1st<value_type>, CompareK>::node_t node_t;
+    V &operator[](const K &key) {
+        node_t *val = tree.find(key);
+        if (val) {
+            return val->data.second;
+        }
+        tree.insert(value_type(key, V()));
+        return tree.find(key)->data.second;
+    }
+    iterator begin() {return tree.begin();}
+    iterator end() {return tree.end();}
+private:
+    bs_tree<K, value_type, Select1st<value_type>, CompareK> tree;
+};
+
+template<typename K, typename CompareK = test3::less<K>>
+class set{
+public:
+    typedef K value_type;
+    typedef typename bs_tree<K, value_type, SelectRaw<value_type>, CompareK>::iterator iterator;
+    typedef typename bs_tree<K, value_type, SelectRaw<value_type>, CompareK>::node_t node_t;
+    void insert(const K &key) {
+        tree.insert(key);
+        return;
+    }
+
+    iterator find(const K &key) {
+        node_t *p = tree.find(key);
+        if (p = nullptr) return end();
+        return iterator(key);
+    }
+
+    iterator begin() {return tree.begin();}
+    iterator end() {return tree.end();}
+private:
+    bs_tree<K, value_type, SelectRaw<value_type>, CompareK> tree;
+};
+int main() {
+    test3::map<int, int> t;
+    test3::set<int> s;
+    for (int i = 0; i < 5; i++) {
+        int key = rand() % 100;
+        int val = rand() % 100;
+        cout <<"key : " << key <<  ", value : " << val << endl;
+        t[key] = val;
+        s.insert(val);
+    }
+    for (auto x : t) {//auto iter = t.begin(); iter != t.end(); iter++, 将iter封装为迭代器类型，并重载丰富
+        cout << x.first << " " << x.second << endl;
+    }
+    for (auto x : s) {
+        cout << x << endl;
+    }
+    //output_tree(t.get_root());
+}
+END(test3)
+
+BEGIN(test4)
+class A{
+public:
+    int x, y;
+public:
+    A():x(rand() % 100), y (rand() % 100) {};
+};
+class CMP {
+public : 
+    bool operator()(const A &a, const A &b) const {
+        if (a.x - b.x) return a.x < b.x;
+        return a.y < b.y;
+    }
+};
+
+ostream &operator <<(ostream &out, const A &a) {
+    out << "(" << a.x << ", " << a.y << ")";
+    return out;
+}
+
+int main() {
+    test3::set<A,CMP> s;
+    for(int i = 0; i < 5; i++) s.insert(A());
+    for (auto x : s ) {
+        cout << x << endl;
+    }
+}
+END(test4)
+int main() {
+    test4::main();
+    return 0;
+}
